@@ -43,26 +43,26 @@ def register():
 @bp.route("/login", methods=["GET", "POST"])        
 def login():
     if request.method == "POST":
-           username = request.form["username"]
-           password = request.form["password"]
-           db, c = get_db()
-           error = None
-           c.execute(
-                "select * from user where username = %s", (username,)
-           )
-           user = c.fetchone()
+        username = request.form["username"]
+        password = request.form["password"]
+        db, c = get_db()
+        error = None
+        c.execute(
+             "select * from user where username = %s", (username,)
+        )
+        user = c.fetchone()
 
-    if user is None:
+        if user is None:
             error = 'Username y o contraseña invalida'
-    elif not check_password_hash(user['password'], password):
-            error = 'Usuario y/o contraseña invalidad'
+        elif not check_password_hash(user['password'], password):
+              error = 'Usuario y/o contraseña invalidad'
 
-    if error is None:
-        session.clear()
-        session['user_id'] = user['id']
-        return redirect(url_for('todo.index'))
+        if error is None:
+            session.clear()
+            session['user_id'] = user['id']
+            return redirect(url_for('todo.index'))
     
-    flash(error)
+        flash(error)
 
     return render_template('auth/login.html')
 
@@ -80,12 +80,13 @@ def load_logged_in_user():
         g.user = c.fetchone()
 
 def login_required(view):
-     @function.wraps(view)
+     @functools.wraps(view)
      def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))
           
         return view(**kwargs)
+     
      return wrapped_view
 
 @bp.route('/logout')

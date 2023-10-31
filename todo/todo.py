@@ -1,11 +1,11 @@
 from flask import (
-    blueprints, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
 from todo.auth import login_required
 from todo.db import get_db
 
-bp = blueprints('todo', __name__)
+bp = Blueprint('todo', __name__)
 
 @bp.route('/')
 @login_required
@@ -16,7 +16,7 @@ def index():
     )
     todos = c.fetchall()
 
-    return render_template('tudu/index.html', todos = todos)
+    return render_template('todo/index.html', todos=todos)
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -26,4 +26,4 @@ def create():
 @bp.route('/update', methods=['GET', 'POST'])
 @login_required
 def update():
-    return
+    return ''
